@@ -39,13 +39,25 @@ class DataAccess
 			}
 			else
 			{
-				if(mysqli_num_rows($res))
-				{
-					return true;
-				}
-				else{
-					return false;
-				}
+				if ($res === true) {
+    return true;
+}
+
+// If it failed completely
+if ($res === false) {
+    return false;
+}
+
+// Now it's safe to use mysqli_num_rows (only for SELECT queries)
+if (mysqli_num_rows($res) > 0) {
+    $data = array();
+    while ($row = mysqli_fetch_assoc($res)) {
+        $data[] = $row;
+    }
+    return $data; // Return the actual data, not just "true"
+} else {
+    return false;
+}
 			}
 		}
 	} 

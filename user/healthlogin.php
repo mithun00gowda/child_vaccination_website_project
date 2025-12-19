@@ -61,7 +61,7 @@ $_SESSION['usertype']="healthworker";
 
 	echo "<script> alert('$a');</script> ";	
 		
-  echo"<script> location.replace('h.php'); </script>";
+  echo"<script> location.replace('healthdashboard.php'); </script>";
 			
            // header('location:childs/index.html');
        
