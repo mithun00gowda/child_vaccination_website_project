@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 21, 2025 at 06:41 AM
+-- Generation Time: Dec 19, 2025 at 01:01 PM
 -- Server version: 8.4.7
 -- PHP Version: 8.3.28
 
@@ -24,6 +24,27 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `admin`
+--
+
+DROP TABLE IF EXISTS `admin`;
+CREATE TABLE IF NOT EXISTS `admin` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`id`, `username`, `password`) VALUES
+(1, 'admin', 'admin123');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `book`
 --
 
@@ -38,15 +59,17 @@ CREATE TABLE IF NOT EXISTS `book` (
   `book_date` date NOT NULL,
   `status` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`bid`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `book`
 --
 
 INSERT INTO `book` (`bid`, `cid`, `vid`, `hid`, `cfirstname`, `cur_date`, `book_date`, `status`) VALUES
-(1, 2, 1, 2, 'testa', '2025-11-21', '2025-11-22', 1),
-(2, 3, 1, 2, 'testab', '2025-11-21', '2025-11-28', 1);
+(1, 2, 1, 2, 'testa', '2025-11-21', '2025-11-22', 0),
+(2, 3, 1, 2, 'testab', '2025-11-21', '2025-11-28', 0),
+(3, 4, 1, 1, 'kruthika', '2025-12-19', '2025-12-19', 0),
+(4, 5, 1, 1, 'prahalad', '2025-12-19', '2025-12-19', 0);
 
 -- --------------------------------------------------------
 
@@ -63,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `child` (
   `gender` varchar(7) NOT NULL,
   `dob` date NOT NULL,
   PRIMARY KEY (`cid`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `child`
@@ -72,7 +95,9 @@ CREATE TABLE IF NOT EXISTS `child` (
 INSERT INTO `child` (`cid`, `cfirstname`, `clastname`, `pid`, `gender`, `dob`) VALUES
 (1, 'test', 'test', 0, 'm', '2025-11-01'),
 (2, 'testa', 'testa', 4, 'f', '2025-11-01'),
-(3, 'testab', 'testab', 4, 'm', '2025-11-01');
+(3, 'testab', 'testab', 4, 'm', '2025-11-01'),
+(4, 'kruthika', 'kruthika', 4, 'f', '2025-12-01'),
+(5, 'prahalad', 'singandi', 4, 'm', '2025-12-01');
 
 -- --------------------------------------------------------
 
@@ -107,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `healthcenter` (
   `description` varchar(1000) NOT NULL,
   `status` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`hid`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `healthcenter`
@@ -116,6 +141,32 @@ CREATE TABLE IF NOT EXISTS `healthcenter` (
 INSERT INTO `healthcenter` (`hid`, `hname`, `hregion`, `himage`, `description`, `status`) VALUES
 (1, 'Victoria Hospital', 'Bengaluru', '0c16e69e8fd4edd1a2536052adf54b63_1199050a8bd4ea18196f.jpeg', 'Victoria Hospital is a government-run hospital affiliated with Bangalore Medical College and Research Institute. It is one of the largest hospitals in Karnataka, located in the heart of Bengaluru.', 1),
 (2, 'Bangalore Medical College', 'Bengaluru', 'cityhospital.jpeg', 'Bangalore Medical College and Research Institute (BMCRI) is a premier medical institution in Karnataka. It provides high-quality medical education and tertiary healthcare services to the people of Karnataka.', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `healthworker`
+--
+
+DROP TABLE IF EXISTS `healthworker`;
+CREATE TABLE IF NOT EXISTS `healthworker` (
+  `hwid` int NOT NULL AUTO_INCREMENT,
+  `hname` varchar(50) NOT NULL,
+  `h_email` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `hid` int NOT NULL,
+  PRIMARY KEY (`hwid`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `healthworker`
+--
+
+INSERT INTO `healthworker` (`hwid`, `hname`, `h_email`, `password`, `hid`) VALUES
+(1, 'Nurse Sarah', 'nurse@gmail.com', '1234', 1),
+(2, 'Dr. Arjun', 'doctor@gmail.com', '1234', 2),
+(3, 'test', 'test@gmail.com', 'test123', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -158,7 +209,14 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `quantity` int NOT NULL,
   `status` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`sid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `schedule`
+--
+
+INSERT INTO `schedule` (`sid`, `date`, `hname`, `vname`, `quantity`, `status`) VALUES
+(1, '2025-12-19', 'Victoria Hospital', 'Hepatitis A', 10, 1);
 
 -- --------------------------------------------------------
 
@@ -175,7 +233,7 @@ CREATE TABLE IF NOT EXISTS `vaccine` (
   `description` varchar(1000) NOT NULL,
   `status` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`vid`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `vaccine`
