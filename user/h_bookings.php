@@ -5,13 +5,31 @@ include("header_health.php");
 if(!isset($_SESSION['h_email'])) { echo "<script>location.replace('healthlogin.php');</script>"; exit; }
 
 $dao = new DataAccess();
-$hid = $_SESSION['hid'];
+// Fallback to 0 to prevent SQL errors if session drops
+$hid = isset($_SESSION['hid']) ? $_SESSION['hid'] : 0; 
+$today = date('Y-m-d');
 
 // ACTION: Mark as Completed
-if(isset($_GET['mark_id'])) {
-    $bid = $_GET['mark_id'];
-    if($dao->query("UPDATE book SET status=0 WHERE bid=$bid")) {
-        echo "<script>alert('Vaccination Marked as Completed!'); location.replace('h_bookings.php');</script>";
+if(isset($_GET['mark_id']) && !empty($_GET['mark_id'])) {
+    // Cast to integer to prevent SQL injection and empty syntax errors
+    $bid = (int)$_GET['mark_id'];
+    
+    // BACKEND SECURITY: Ensure the booking is actually for today before allowing the update
+    $check_booking = $dao->query("SELECT book_date FROM book WHERE bid=$bid");
+    
+    // Check if valid data came back and matches today's date
+    if(is_array($check_booking) && !empty($check_booking) && isset($check_booking[0]['book_date']) && $check_booking[0]['book_date'] == $today) {
+        
+        $data = array('status' => 0);
+        $condition = 'bid=' . $bid;
+        
+        if($dao->update($data, 'book', $condition)) {
+            echo "<script>alert('Vaccination Marked as Completed!'); location.replace('h_bookings.php');</script>";
+            exit;
+        }
+    } else {
+        echo "<script>alert('Action Restricted! You can only mark appointments as completed on their exact scheduled date.'); location.replace('h_bookings.php');</script>";
+        exit;
     }
 }
 
@@ -33,28 +51,43 @@ $bookings = $dao->query($q);
 
 <div class="fullwidth-block">
     <div class="container">
-        <table class="app-table">
+        <table class="app-table" style="width: 100%; text-align: left; border-collapse: collapse; margin-top: 20px;">
             <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Child Name</th>
-                    <th>Age</th>
-                    <th>Vaccine</th>
-                    <th>Action</th>
+                <tr style="background-color: lightskyblue; color: black;">
+                    <!-- ADDED SLOT NUMBER HEADER -->
+                    <th style="padding: 12px; border-bottom: 2px solid #ccc;">Slot No.</th>
+                    <th style="padding: 12px; border-bottom: 2px solid #ccc;">Date</th>
+                    <th style="padding: 12px; border-bottom: 2px solid #ccc;">Child Name</th>
+                    <th style="padding: 12px; border-bottom: 2px solid #ccc;">DOB</th>
+                    <th style="padding: 12px; border-bottom: 2px solid #ccc;">Vaccine</th>
+                    <th style="padding: 12px; border-bottom: 2px solid #ccc;">Action</th>
                 </tr>
             </thead>
             <tbody>
-                <?php if(empty($bookings)) { echo "<tr><td colspan='5' align='center'>No pending bookings.</td></tr>"; } else { 
+                <?php if(empty($bookings) || !is_array($bookings)) { 
+                    echo "<tr><td colspan='6' align='center' style='padding: 20px;'>No pending bookings.</td></tr>"; 
+                } else { 
                     foreach($bookings as $row) { ?>
-                    <tr>
-                        <td><?php echo $row['book_date']; ?></td>
-                        <td><b><?php echo $row['cfirstname']; ?></b><br><small><?php echo $row['gender']; ?></small></td>
-                        <td><?php echo $row['dob']; ?></td>
-                        <td style="color:blue;"><?php echo $row['vname']; ?></td>
-                        <td>
-                            <a href="h_bookings.php?mark_id=<?php echo $row['bid']; ?>" class="btn-action" onclick="return confirm('Confirm Vaccination Complete?');">
-                                Mark Complete
-                            </a>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <!-- ADDED SLOT NUMBER DATA -->
+                        <td style="padding: 12px; color: black;"><b>#<?php echo $row['bid']; ?></b></td>
+                        <td style="padding: 12px; color: black;"><?php echo date('d M Y', strtotime($row['book_date'])); ?></td>
+                        <td style="padding: 12px; color: black;"><b><?php echo ucfirst($row['cfirstname']); ?></b><br><small><?php echo strtoupper($row['gender']); ?></small></td>
+                        <td style="padding: 12px; color: black;"><?php echo date('d M Y', strtotime($row['dob'])); ?></td>
+                        <td style="padding: 12px; color:blue;"><b><?php echo $row['vname']; ?></b></td>
+                        <td style="padding: 12px;">
+                            <?php 
+                            // UI LOGIC: Only show clickable button if the appointment is today
+                            if($row['book_date'] == $today): 
+                            ?>
+                                <a href="h_bookings.php?mark_id=<?php echo $row['bid']; ?>" class="button" style="background-color: #4CAF50; color: white; padding: 6px 15px; border-radius: 4px; border: none; font-weight: bold; text-decoration: none;" onclick="return confirm('Confirm Vaccination Complete?');">
+                                    Mark Complete
+                                </a>
+                            <?php else: ?>
+                                <span style="background-color: #e0e0e0; color: #888; padding: 6px 15px; border-radius: 4px; font-weight: bold; cursor: not-allowed; display: inline-block;">
+                                    <?php echo ($row['book_date'] < $today) ? 'Overdue' : 'Upcoming'; ?>
+                                </span>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php } } ?>

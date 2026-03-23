@@ -22,7 +22,6 @@ if(isset($_SESSION['hid']) && isset($_SESSION['vid'])) {
 }
 
 // 3. FETCH DATA
-// 3. FETCH DATA
 
 // A. Get Child Details
 $q3 = "select * from child where cid=$id";
@@ -63,9 +62,10 @@ $form = new FormAssist($elements, $_POST);
 
 $labels = array('cid'=>"child Id", 'vid'=>"vaccine Id", 'hid'=>"healthcenter Id", 'cfirstname'=>"Child firstname", 'cur_date'=>"current date", 'book_date'=>"booking date");
 
+// FIX: Increased maxlength from 20 to 100 to allow longer hospital and vaccine names
 $rules = array(
-    "vid" => array("required"=>true, "minlength"=>1, "maxlength"=>20),
-    "hid" => array("required"=>true, "minlength"=>1, "maxlength"=>20),
+    "vid" => array("required"=>true, "minlength"=>1, "maxlength"=>100),
+    "hid" => array("required"=>true, "minlength"=>1, "maxlength"=>100),
     "cfirstname" => array("required"=>true),
     "book_date" => array("required"=>true),
 );
@@ -74,43 +74,55 @@ $validator = new FormValidator($rules, $labels);
 
 if(isset($_POST["book"]))
 {
-    // Check for existing bookings
-    $q4 = "Select * from book where cid=$id and vid=$vid";
-    $count = $dao->query($q4);
-    
-    // Check for cancelled bookings (status=2)
-    $q5 = "Select * from book where cid=$id and vid=$vid and status=2"; 
-    $count1 = $dao->query($q5);
-
-    // LOGIC FIX: If (No booking exists) OR (Booking exists but is cancelled)
-    if(empty($count) || !empty($count1)) 
+    // LOGIC FIX: Check if slots are available before processing booking
+    if($slots_available > 0) 
     {
-        if($validator->validate($_POST))
-        {
-             $data = array(
-                'cid' => $id,
-                'vid' => $vid,
-                'hid' => $hid,
-                'cfirstname' => $_POST['cfirstname'],
-                'cur_date' => $date1,
-                'book_date' => $_POST['book_date'],
-            );
+        // Check for existing bookings
+        $q4 = "Select * from book where cid=$id and vid=$vid";
+        $count = $dao->query($q4);
         
-            if($dao->insert($data, "book"))
+        // Check for cancelled bookings (status=2)
+        $q5 = "Select * from book where cid=$id and vid=$vid and status=2"; 
+        $count1 = $dao->query($q5);
+
+        // LOGIC FIX: If (No booking exists) OR (Booking exists but is cancelled)
+        if(empty($count) || !empty($count1)) 
+        {
+            if($validator->validate($_POST))
             {
-                echo "<script> alert('Booking Success');</script> ";
-                echo "<script> location.replace('email.php'); </script>";
-            }
-            else
-            {
-                $msg = "Insertion failed"; 
-                echo "<script> alert('$msg');</script> ";
-            }
-        }   
-    }
-    else
+                 $data = array(
+                    'cid' => $id,
+                    'vid' => $vid,
+                    'hid' => $hid,
+                    'cfirstname' => $_POST['cfirstname'],
+                    'cur_date' => $date1,
+                    'book_date' => $_POST['book_date'],
+                );
+            
+                if($dao->insert($data, "book"))
+                {
+                    // DECREMENT GLOBAL SLOT NUMBER
+                    $new_quantity = $slots_available - 1;
+                    $dao->query("UPDATE schedule SET quantity=$new_quantity WHERE hname='$hname' AND vname='$vname'");
+
+                    echo "<script> alert('Booking Success');</script> ";
+                    echo "<script> location.replace('email.php'); </script>";
+                }
+                else
+                {
+                    $msg = "Insertion failed"; 
+                    echo "<script> alert('$msg');</script> ";
+                }
+            }   
+        }
+        else
+        {
+            echo "<script> alert('Already Booked');</script> ";
+        }
+    } 
+    else 
     {
-        echo "<script> alert('Already Booked');</script> ";
+        echo "<script> alert('Sorry, no slots available for this vaccine at this health center.');</script> ";
     }
 }
 ?>
@@ -184,13 +196,13 @@ if(isset($_POST["book"]))
                                     <div class="col-md-6">
                                        <div class="form-group">
                                             <span class="form-label">Available Slots</span>
-                                            <input class="form-control" type="text" value="<?php echo $slots_available; ?>" required readonly>
+                                            <input class="form-control" type="text" value="<?php echo $slots_available; ?>" required readonly <?php if($slots_available <= 0) echo 'style="color: red; font-weight: bold;"'; ?>>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form-btn">
-                                    <button class="submit-btn" name="book">Book Now</button>
+                                    <button class="submit-btn" name="book" <?php if($slots_available <= 0) echo 'disabled style="background-color: #999; cursor: not-allowed;" title="No slots available"'; ?>>Book Now</button>
                                 </div>
                             </form>
                         </div>
