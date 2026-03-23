@@ -19,7 +19,12 @@ if(!isset($_SESSION['vid']) || empty($_SESSION['vid'])) {
     exit;
 }
 
-include("header2.php");   
+// Check if user is logged in (either parent or health worker)
+if(isset($_SESSION['email']) || isset($_SESSION['h_email'])) {
+    include("header2.php");
+} else {
+    include("header.php");
+}
 ?>
 
 <div class="page-head" data-bg-image="images/5570834.jpg">
@@ -49,12 +54,18 @@ include("header2.php");
                     if(empty($image_name)) {
                         $image_path = "../images/hospital_default.jpg"; // Ensure you have a default image or it will show broken
                     }
+                    
+                    // PARTITION LOGIC: Check if Parent is logged in
+                    $is_logged_in = isset($_SESSION['email']) && !empty($_SESSION['email']);
+                    
+                    // Set target URL based on login status
+                    $target_url = $is_logged_in ? "selectchild.php?id=" . $info[$i]["hid"] : "index.php";
             ?>
             
             <div class="col-md-6">
                 <div class="health-center-info" style="margin-bottom: 30px; border: 1px solid #eee; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
                     
-                    <a href="selectchild.php?id=<?= $info[$i]["hid"]?>">
+                    <a href="<?php echo $target_url; ?>">
                         <!-- FIX: Pointing to ../upload/ folder -->
                         <img style="width:100%; height:250px; object-fit:cover; border-radius: 4px;" 
                              src="<?php echo $image_path; ?>" 
@@ -66,14 +77,21 @@ include("header2.php");
                     
                     <div class="health-center-details" style="padding-top: 15px;">
                         <h3 style="margin-top: 0;">
-                            <a href="selectchild.php?id=<?= $info[$i]["hid"]?>" style="color: #333; text-decoration: none;">
+                            <a href="<?php echo $target_url; ?>" style="color: #333; text-decoration: none;">
                                 <?php echo $info[$i]["hname"]?>
                             </a>
                         </h3>
                         <p style="color: lightskyblue; font-weight: bold;"><i class="fa fa-map-marker"></i> <?php echo $info[$i]["hregion"]; ?></p>
                         <p style="color: #666;"><?php echo $info[$i]["description"]?></p>
                         
-                        <a href="selectchild.php?id=<?= $info[$i]["hid"]?>" class="button" style="background-color: lightskyblue; color: white; padding: 8px 15px; border-radius: 4px; text-decoration: none; display: inline-block; margin-top: 10px;">Select Hospital</a>
+                        <?php if($is_logged_in): ?>
+                            <!-- Flow for Logged-In Parents -->
+                            <a href="<?php echo $target_url; ?>" class="button" style="background-color: lightskyblue; color: white; padding: 8px 15px; border-radius: 4px; text-decoration: none; display: inline-block; margin-top: 10px;">Select Hospital</a>
+                        <?php else: ?>
+                            <!-- Restricted Flow for General Visitors -->
+                            <a href="<?php echo $target_url; ?>" class="button" style="background-color: #ff9800; color: white; padding: 8px 15px; border-radius: 4px; text-decoration: none; display: inline-block; margin-top: 10px;">Login to Book</a>
+                        <?php endif; ?>
+                        
                     </div>
                 </div>
             </div>
