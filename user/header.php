@@ -39,8 +39,8 @@ $a=$_SESSION['email'];
 						<a href="index.php" class="branding">
 							<img src="images/childvaccinelogo.png" alt="" class="logo">
 							<div class="logo-type">
-								<h1 class="site-title">ChildHealthKerala</h1>
-								<small class="site-description">Protecting Kerala's Future !</small>
+								<h1 class="site-title">ChildHealthKarnataka</h1>
+								<small class="site-description">Protecting Karnataka's Future !</small>
 							</div>
 						</a>
 
@@ -73,8 +73,8 @@ $a=$_SESSION['email'];
 						<a href="index.php" class="branding">
 							<img src="images/childvaccinelogo.png" alt="" class="logo">
 							<div class="logo-type">
-								<h1 class="site-title">ChildHealthKerala</h1>
-								<small class="site-description">Protecting Kerala's Future !</small>
+								<h1 class="site-title">ChildHealthKarnataka</h1>
+								<small class="site-description">Protecting Karnataka's Future !</small>
 							</div>
 						</a>
 
@@ -82,7 +82,7 @@ $a=$_SESSION['email'];
 							<button class="menu-toggle"><i class="fa fa-bars"></i></button>
 							<ul class="menu">
 								<li class="home menu-item"><a href="index.php"><img src="images/home-icon.png" alt="Home"></a></li>
-								<li class="menu-item"><a href="contactus1.php">Contact us</a></li>
+								<li class="menu-item"><a href="contactus.php">Contact us</a></li>
 								<li class="menu-item"><a href="healthlogin.php">HealthCenter</a></li>
 								<li class="menu-item"><a href="registration.php">Register</a></li>
 								<li class="menu-item"><a href="login.php">Login</a></li>

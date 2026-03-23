@@ -3,136 +3,140 @@
 include("header2.php");
 
 $dao=new DataAccess();
-$info=$dao->getData('*','child','cid='.$_GET['id']);
+
+// FIX: Change $_GET['cid'] to $_GET['id'] to match the URL from viewchilds.php
+$child_id = $_GET['id'];
+$info=$dao->getData('*','child','cid='.$child_id);
+
 $elements=array(
-       "ch_firstname"=>$info[0]['ch_firstname'],"ch_lastname"=>$info[0]['ch_lastname'],"gender"=>$info[0]['gender'],"dob"=>$info[0]['dob']
+       "cfirstname"=>$info[0]['cfirstname'],"clastname"=>$info[0]['clastname'],"gender"=>$info[0]['gender'],"dob"=>$info[0]['dob']
 );
 $form = new FormAssist($elements,$_POST);
-$labels=array('ch_firstname'=>"Child's first name",'ch_lastname'=>"Child's last name","gender"=>"Gender","dob"=>"Date of Birth");
+$labels=array('cfirstname'=>"Child's first name",'clastname'=>"Child's last name","gender"=>"Gender","dob"=>"Date of Birth");
 $rules=array(
-    "ch_firstname"=>array("required"=>true),
-    "ch_lastname"=>array("required"=>true),
-	"gender"=>array("required"=>true,"exist"=>array("m","f")),
-	"dob"=>array("required"=>true),
-	);
+    "cfirstname"=>array("required"=>true),
+    "clastname"=>array("required"=>true),
+    "gender"=>array("required"=>true,"exist"=>array("m","f")),
+    "dob"=>array("required"=>true),
+    );
 $validator = new FormValidator($rules,$labels);
+
 if(isset($_POST["btn_update"]))
 {
-if($validator->validate($_POST))
-{
-$data=array(
-   
-	'pid'=>$_SESSION['pid'],
-	 'ch_firstname'=>$_POST['ch_firstname'],
-        'ch_lastname'=>$_POST['ch_lastname'],
-	 'gender'=>$_POST['gender'],
-	'dob'=>$_POST['dob'],
-
-    );
-  $condition='cid='.$_GET['id'];
-  if($dao->update($data,'child',$condition))
+    if($validator->validate($_POST))
     {
-        $msg="Successfullly Updated";
-header('location:viewchilds.php');
-    }
-    else
+        $data=array(
+            'pid'=>$_SESSION['pid'],
+            'cfirstname'=>$_POST['cfirstname'],
+            'clastname'=>$_POST['clastname'],
+            'gender'=>$_POST['gender'],
+            'dob'=>$_POST['dob'],
+        );
+        
+        // FIX: Also use the corrected variable here for the update query
+        $condition='cid='.$child_id;
+        
+        if($dao->update($data,'child',$condition))
         {
-		$msg="Failed";
-	} ?>
-
-
+            $msg="Successfullly Updated";
+            header('location:viewchilds.php');
+            exit; // Best practice: Always exit after a header redirect
+        }
+        else
+        {
+            $msg="Failed";
+        } 
+?>
 <span style="color:red;"><?php echo $msg; ?></span>
-
 <?php
-    
-}
-
-
+    }
 }
 ?>
 <html>
-	<div class="page-head"  data-bg-image="images/5570834.jpg">
-		   <div class="container">
-				 <h2 class="page-title" style="color: white">Edit child information</h2>
-			   <p style="color: white">Please do edit your child's details if necessary.</p>
-	       </div>
+    <div class="page-head"  data-bg-image="images/5570834.jpg">
+           <div class="container">
+                 <h2 class="page-title" style="color: white">Edit child information</h2>
+               <p style="color: white">Please do edit your child's details if necessary.</p>
+           </div>
       </div>
 <body> 
 
-	<div class="fullwidth-block">
-					<div class="container">
-						<div class="row">
-							 <div class="col-md-12 col-sm-12">
-				<div class="feature" style="color: black">
+    <div class="fullwidth-block">
+        <div class="container">
+            <div class="row">
+                 <div class="col-md-12 col-sm-12">
+                    <div class="feature" style="color: black">
 
-     <form action="" method="POST"  >
- <table style="color: black; margin-left:auto;margin-right:auto;" >
-	  <tr>
-<div class="row">
-              <div class="col-md-8">
-				
-					 <td> <label for="">Name:</label></td>
-						<td ><?= $form->textBox('ch_firstname',array('class'=>'form-control')); ?></td></tr>
-				        <tr><td></td><td><span style="color:red;">
-						   <?= $validator->error('ch_firstname'); ?></td></tr></div></div>
-	             
-<tr><td><br></td></tr>
-  <tr>
-<div class="row">
-              <div class="col-md-8">
-				
-					 <td> <label for="">Name:</label></td>
-						<td ><?= $form->textBox('ch_lastname',array('class'=>'form-control')); ?></td></tr>
-				        <tr><td></td><td><span style="color:red;">
-				         <?= $validator->error('ch_lastname'); ?></td></tr></div></div>
-	           
-<tr><td><br></td></tr>
+                         <form action="" method="POST"  >
+                             <table style="color: black; margin-left:auto;margin-right:auto;" >
+                                  <tr>
+                                    <div class="row">
+                                      <div class="col-md-8">
+                                             <td> <label for="">First Name:</label></td>
+                                                <td ><?= $form->textBox('cfirstname',array('class'=>'form-control')); ?></td></tr>
+                                                <tr><td></td><td><span style="color:red;">
+                                                   <?= $validator->error('cfirstname'); ?></span></td></tr></div></div>
+                                     
+                                <tr><td><br></td></tr>
+                                  <tr>
+                                <div class="row">
+                                              <div class="col-md-8">
+                                                
+                                                     <td> <label for="">Last Name:</label></td>
+                                                        <td ><?= $form->textBox('clastname',array('class'=>'form-control')); ?></td></tr>
+                                                        <tr><td></td><td><span style="color:red;">
+                                                         <?= $validator->error('clastname'); ?></span></td></tr></div></div>
+                                               
+                                <tr><td><br></td></tr>
 
-<tr>
-	<div class="row">
-                    <div class="col-md-8">
+                                <tr>
+                                    <div class="row">
+                                                    <div class="col-md-8">
 
- <td> <label for="">Sex:</label></td>
+                                 <td> <label for="">Sex:</label></td>
 
-<td><?php
-                   $options=array('Male'=>"m","Female"=>"f");
-                    echo $form->radioGroup('gender',array(),$options); ?></td></tr>
-<tr><td></td><td><span style="color:red;">
-<?= $validator->error('gender'); ?>
-</td>
-</tr>
-</div>
-</div>
-<tr><td><br></td></tr>
-			<tr>
-				<div class="row">
-                    <div class="col-md-8">
+                                <td><?php
+                                                   $options=array('Male'=>"m","Female"=>"f");
+                                                    echo $form->radioGroup('gender',array(),$options); ?></td></tr>
+                                <tr><td></td><td><span style="color:red;">
+                                <?= $validator->error('gender'); ?></span>
+                                </td>
+                                </tr>
+                                </div>
+                                </div>
+                                <tr><td><br></td></tr>
+                                            <tr>
+                                                <div class="row">
+                                                    <div class="col-md-8">
 
 
- <td> <label for="">Date of Birth:</label></td>
+                                 <td> <label for="">Date of Birth:</label></td>
 
-<td><?= $form->inputBox('dob',array('class'=>'form-control'),"date"); ?></td></tr>
-<tr><td></td><td><span style="color:red;">
-	<?= $validator->error('dob'); ?></span>
-	</td></tr>			
-</div>
-</div>
- </tr>
-<tr><td><br></td></tr>
-	 <tr>
-	<div class="row">
-      <div class="col-md-12">
-        <div class="form-group">
-          <td><input type="submit" name="btn_update" value="Save Changes" class="button" style="background-color: lightskyblue;color: black"> </td>
+                                <td><?= $form->inputBox('dob',array('class'=>'form-control'),"date"); ?></td></tr>
+                                <tr><td></td><td><span style="color:red;">
+                                    <?= $validator->error('dob'); ?></span>
+                                    </td></tr>          
+                                </div>
+                                </div>
+                                 </tr>
+                                <tr><td><br></td></tr>
+                                     <tr>
+                                    <div class="row">
+                                      <div class="col-md-12">
+                                        <div class="form-group">
+                                          <td><input type="submit" name="btn_update" value="Save Changes" class="button" style="background-color: lightskyblue;color: black"> </td>
+                                        </div>
+                                      </div></div>
+                                     </tr>
+                            </table>
+                        </form>
+                    </div>
+                 </div>
+            </div>
         </div>
-      </div></div>
-	 </tr></table>
-		 </form>
-</div></div></div></div>
-		<?php include("footer2.php"); ?>
-				
-	</body>
-
-
+    </div>
+    
+    <?php include("footer2.php"); ?>
+            
+</body>
 </html>
-		

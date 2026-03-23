@@ -1,6 +1,12 @@
 <?php 
 require('../config/autoload.php'); 
-include("header2.php");
+
+// Check if user is logged in (either parent or health worker)
+if(isset($_SESSION['email']) || isset($_SESSION['h_email'])) {
+    include("header2.php");
+} else {
+    include("header.php");
+}
 
 $dao = new DataAccess();
 $elements = array(
@@ -86,7 +92,7 @@ if(isset($_POST["send"]))
                     <h3 style="color:black;">Get in Touch</h3>
                     <p>Have questions about vaccinations or schedules? Feel free to contact us.</p>
                     <br>
-                    <p><i class="contact-icon">📍</i> 123 Health Avenue, Kerala, India</p>
+                    <p><i class="contact-icon">📍</i> 123 Health Avenue, Karnataka, India</p>
                     <p><i class="contact-icon">📞</i> +91 98765 43210</p>
                     <p><i class="contact-icon">✉️</i> support@vaccination.com</p>
                 </div>

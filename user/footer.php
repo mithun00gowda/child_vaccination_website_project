@@ -52,7 +52,7 @@
 						</div>
 					</div> <!-- .row -->
 
-					<p class="colophon" style="color: white">Copyright 2021 ChildHealthKerala name. Designed by <a href="http://www.vandelaydesign.com/" title="Designed by VandelayDesign.com" target="_blank">VandelayDesign.com</a>. All rights reserved</p>
+					<p class="colophon" style="color: white">Copyright 2021 ChildHealthKarnataka name. All rights reserved</p>
 				</div> <!-- .container -->
 			</footer>
 		</div>
