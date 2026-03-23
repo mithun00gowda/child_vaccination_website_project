@@ -44,7 +44,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div> <p class="colophon" style="color: white">Copyright 2025 ChildHealthKarnataka. Designed by <a href="http://www.vandelaydesign.com/" title="Designed by VandelayDesign.com" target="_blank">VandelayDesign.com</a>. All rights reserved</p>
+                    </div> <p class="colophon" style="color: white">Copyright 2025 ChildHealthKarnataka. All rights reserved</p>
                 </div> </footer>
         </div>
 <script src="js/jquery-1.11.1.min.js"></script>
