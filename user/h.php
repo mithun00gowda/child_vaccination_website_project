@@ -1,6 +1,6 @@
 <?php 
 require('../config/autoload.php'); 
-include("header1.php"); // Assuming header1.php is the health worker header
+include("header_health.php"); // Assuming header_health.php is the health worker header
 
 if(!isset($_SESSION['h_email'])) { 
     echo "<script>location.replace('healthlogin.php');</script>"; 
@@ -92,7 +92,7 @@ $active_today_list = $dao->query($q_active_today);
                                     <td style="padding: 12px; color: black;"><?= date('d M Y', strtotime($booking['book_date'])) ?></td>
                                     <td style="padding: 12px;">
                                         <!-- Replace 'complete_booking.php' with your actual script that marks status=0 -->
-                                        <a href="complete_booking.php?id=<?= $booking['bid'] ?>" class="button" style="background-color: #4CAF50; color: white; padding: 6px 15px; border-radius: 4px; border: none; font-weight: bold;">
+                                         <a href="h_bookings.php?mark_id=<?= $booking['bid'] ?>" class="button" style="background-color: #4CAF50; color: white; padding: 6px 15px; border-radius: 4px; border: none; font-weight: bold;" onclick="return confirm('Confirm Vaccination Complete? Parent will be notified.');">
                                             Mark Done
                                         </a>
                                     </td>

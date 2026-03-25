@@ -37,6 +37,7 @@ if(isset($_SESSION['h_email'])) {
                         <li class="menu-item"><a href="h.php">Dashboard</a></li>
                         <li class="menu-item"><a href="h_bookings.php">Pending Bookings</a></li>
                         <li class="menu-item"><a href="healthreport.php">Completed Reports</a></li>
+                        <li class="menu-item"><a href="notifications.php">Notifications</a></li>
                         <li class="menu-item"><a href="hlogout.php">Logout</a></li>
                     </ul>
                 </nav>

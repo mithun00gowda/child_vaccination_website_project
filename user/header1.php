@@ -42,6 +42,7 @@ if(isset($_SESSION['h_email']) && !empty($_SESSION['h_email']))
                             <li class="home menu-item"><a href="h.php"><img src="images/home-icon.png" alt="Home"></a></li>
                             <li class="menu-item"><a href="h.php">View Bookings</a></li>
                             <li class="menu-item"><a href="healthreport.php">Reports</a></li>
+                            <li class="menu-item"><a href="notifications.php">Notifications</a></li>
                             <li class="menu-item"><a href="hlogout.php">Logout</a></li>
                         </ul>
                     </nav>
