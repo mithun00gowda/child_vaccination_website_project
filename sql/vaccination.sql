@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 19, 2025 at 01:01 PM
+-- Generation Time: Mar 25, 2026 at 11:11 AM
 -- Server version: 8.4.7
 -- PHP Version: 8.3.28
 
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `book` (
   `book_date` date NOT NULL,
   `status` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`bid`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `book`
@@ -69,7 +69,15 @@ INSERT INTO `book` (`bid`, `cid`, `vid`, `hid`, `cfirstname`, `cur_date`, `book_
 (1, 2, 1, 2, 'testa', '2025-11-21', '2025-11-22', 0),
 (2, 3, 1, 2, 'testab', '2025-11-21', '2025-11-28', 0),
 (3, 4, 1, 1, 'kruthika', '2025-12-19', '2025-12-19', 0),
-(4, 5, 1, 1, 'prahalad', '2025-12-19', '2025-12-19', 0);
+(4, 5, 1, 1, 'prahalad', '2025-12-19', '2025-12-19', 0),
+(5, 6, 1, 1, 'test', '2026-03-23', '2026-03-29', 0),
+(6, 7, 1, 1, 'test', '2026-03-23', '2026-03-23', 0),
+(7, 8, 1, 1, 'mithun', '2026-03-23', '2026-03-24', 1),
+(8, 9, 1, 2, 'nagu', '2026-03-23', '2026-03-23', 1),
+(9, 10, 1, 2, 'mithun', '2026-03-23', '2026-03-24', 1),
+(10, 11, 1, 2, 'kruthika', '2026-03-23', '2026-03-24', 1),
+(11, 12, 1, 1, 'test', '2026-03-25', '2026-03-25', 0),
+(12, 13, 1, 1, 'test', '2026-03-25', '2026-03-25', 0);
 
 -- --------------------------------------------------------
 
@@ -86,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `child` (
   `gender` varchar(7) NOT NULL,
   `dob` date NOT NULL,
   PRIMARY KEY (`cid`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `child`
@@ -97,7 +105,9 @@ INSERT INTO `child` (`cid`, `cfirstname`, `clastname`, `pid`, `gender`, `dob`) V
 (2, 'testa', 'testa', 4, 'f', '2025-11-01'),
 (3, 'testab', 'testab', 4, 'm', '2025-11-01'),
 (4, 'kruthika', 'kruthika', 4, 'f', '2025-12-01'),
-(5, 'prahalad', 'singandi', 4, 'm', '2025-12-01');
+(5, 'prahalad', 'singandi', 4, 'm', '2025-12-01'),
+(13, 'test', 't', 5, 'f', '2026-03-02'),
+(12, 'test', 'test', 5, 'm', '2026-03-01');
 
 -- --------------------------------------------------------
 
@@ -170,6 +180,33 @@ INSERT INTO `healthworker` (`hwid`, `hname`, `h_email`, `password`, `hid`) VALUE
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `notifications`
+--
+
+DROP TABLE IF EXISTS `notifications`;
+CREATE TABLE IF NOT EXISTS `notifications` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_email` varchar(100) NOT NULL COMMENT 'Can be parent username or health worker email',
+  `message` text NOT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT '0',
+  `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `user_email`, `message`, `is_read`, `date_created`) VALUES
+(1, 'test1', 'Update: test has successfully received the Hepatitis A vaccine. View your reports for details.', 1, '2026-03-25 16:20:03'),
+(2, 'test1', 'Your vaccination booking for test on 2026-03-25 at Victoria Hospital is Confirmed.', 1, '2026-03-25 16:27:28'),
+(3, 'nurse@gmail.com', 'New Booking: test is scheduled for Hepatitis A on 2026-03-25.', 0, '2026-03-25 16:27:28'),
+(4, 'test@gmail.com', 'New Booking: test is scheduled for Hepatitis A on 2026-03-25.', 1, '2026-03-25 16:27:28'),
+(5, 'test1', 'Update: test has successfully received the Hepatitis A vaccine. View your reports for details.', 1, '2026-03-25 16:30:06');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `registration`
 --
 
@@ -182,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `registration` (
   `password` varchar(30) NOT NULL,
   PRIMARY KEY (`pid`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `registration`
@@ -192,7 +229,8 @@ INSERT INTO `registration` (`pid`, `pname`, `phone`, `username`, `password`) VAL
 (1, 'yaseen', '9898989898', 'yaseen@gmail.com', '1234'),
 (2, 'abhsihek', '8989898989', 'abhishek@gmail.com', '1234'),
 (3, 'abhidev', '9898989898', 'abhidev@gmail.com', '1234'),
-(4, 'test123', '6362389287', 'test123', 'test123');
+(4, 'test123', '6362389287', 'test123', 'test123'),
+(5, 'test1', '9492992029', 'test1', 'test1');
 
 -- --------------------------------------------------------
 
@@ -209,14 +247,15 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `quantity` int NOT NULL,
   `status` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`sid`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `schedule`
 --
 
 INSERT INTO `schedule` (`sid`, `date`, `hname`, `vname`, `quantity`, `status`) VALUES
-(1, '2025-12-19', 'Victoria Hospital', 'Hepatitis A', 10, 1);
+(1, '2025-12-19', 'Victoria Hospital', 'Hepatitis A', 8, 1),
+(2, '2026-03-24', 'Bangalore Medical College', 'Hepatitis A', 19, 1);
 
 -- --------------------------------------------------------
 
