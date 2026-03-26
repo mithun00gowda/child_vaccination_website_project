@@ -24,7 +24,6 @@
 if(isset($_SESSION['email']) && !empty($_SESSION['email'])) 
 { 
     $a=$_SESSION['email'];
-    //$b=$_SESSION['pid']; 
 ?>
     <body>
     
@@ -44,11 +43,12 @@ if(isset($_SESSION['email']) && !empty($_SESSION['email']))
                             <button class="menu-toggle"><i class="fa fa-bars"></i></button>
                             <ul class="menu">
                                 <li class="home menu-item"><a href="index2.php"><img src="images/home-icon.png" alt="Home"></a></li>
-                                <!-- <li class="menu-item"><a href="profile.php"><?php echo $a ?> </a></li> -->
-                                <li class="menu-item"><a href="addchild.php">Add Child </a></li>
-                                <li class="menu-item"><a href="viewchilds.php">My Child </a></li>
+                                <li class="menu-item"><a href="addchild.php">Add Child</a></li>
+                                <li class="menu-item"><a href="viewchilds.php">My Child</a></li>
                                 <li class="menu-item"><a href="notifications.php">Notifications</a></li>
-                                <li class="menu-item"><a href="viewbooking.php">View Bookings</a></li>
+                                <li class="menu-item"><a href="viewbooking.php">Bookings</a></li>
+                                <!-- NEW: Report link added here -->
+                                <li class="menu-item"><a href="parentreport.php" style="color: lightskyblue; font-weight: bold;">Reports</a></li>
                                 <li class="menu-item"><a href="index.php">Logout</a></li>
                             </ul>
                         </nav>
@@ -80,11 +80,12 @@ if(isset($_SESSION['email']) && !empty($_SESSION['email']))
                             <button class="menu-toggle"><i class="fa fa-bars"></i></button>
                             <ul class="menu">
                                 <li class="home menu-item"><a href="index2.php"><img src="images/home-icon.png" alt="Home"></a></li>
-                                <li class="menu-item"><a href="addchild.php">Add Child </a></li>
-                                <li class="menu-item"><a href="viewchilds.php">My Child </a></li>
+                                <li class="menu-item"><a href="addchild.php">Add Child</a></li>
+                                <li class="menu-item"><a href="viewchilds.php">My Child</a></li>
                                 <li class="menu-item"><a href="notifications.php">Notifications</a></li>
-                                <!-- NEW: View Bookings option added here -->
-                                <li class="menu-item"><a href="viewbooking.php">View Bookings</a></li>
+                                <li class="menu-item"><a href="viewbooking.php">Bookings</a></li>
+                                <!-- NEW: Report link added here -->
+                                <li class="menu-item"><a href="parentreport.php" style="color: lightskyblue; font-weight: bold;">Reports</a></li>
                                 <li class="menu-item"><a href="index.php">Parent Logout</a></li>
                             
                             </ul>

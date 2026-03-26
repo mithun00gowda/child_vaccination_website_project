@@ -50,6 +50,8 @@ $a=$_SESSION['email'];
 							<li class="home menu-item"><a href="index.php"><img src="images/home-icon.png" alt="Home"></a></li>
 								<li class="menu-item"><a href="contactus1.php">Contact us</a></li>
 								<li class="menu-item"><a href="healthlogin.php">HealthCenter</a></li>
+								<li class="menu-item"><a href="healthlogin.php">HealthCenter</a></li>
+								<li class="menu-item"><a href="../admin/login.php">Admin</a></li>
 								<li class="menu-item"><a href="registration.php">Register</a></li>
 								<li class="menu-item"><a href="login.php">Login</a></li>
 							</ul>
@@ -84,6 +86,7 @@ $a=$_SESSION['email'];
 								<li class="home menu-item"><a href="index.php"><img src="images/home-icon.png" alt="Home"></a></li>
 								<li class="menu-item"><a href="contactus.php">Contact us</a></li>
 								<li class="menu-item"><a href="healthlogin.php">HealthCenter</a></li>
+								<li class="menu-item"><a href="../admin/index.php">Admin</a></li>
 								<li class="menu-item"><a href="registration.php">Register</a></li>
 								<li class="menu-item"><a href="login.php">Login</a></li>
 							

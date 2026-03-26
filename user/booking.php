@@ -35,13 +35,15 @@ $info = $dao->query("SELECT * FROM schedule WHERE hname='$hname_safe' AND vname=
 $slots_available = empty($info) ? 0 : intval($info[0]['quantity']);
 $date1 = date('Y-m-d', time());
 
-$elements = array("cfirstname"=>"", "book_date"=>"");
+// Added parent_email to elements
+$elements = array("cfirstname"=>"", "book_date"=>"", "parent_email"=>"");
 $form = new FormAssist($elements, $_POST);
 
-$labels = array('cfirstname'=>"Child firstname", 'book_date'=>"booking date");
+$labels = array('cfirstname'=>"Child firstname", 'book_date'=>"booking date", 'parent_email'=>"Email Address");
 $rules = array(
     "cfirstname" => array("required"=>true),
     "book_date" => array("required"=>true),
+    "parent_email" => array("required"=>true)
 );
 $validator = new FormValidator($rules, $labels);
 
@@ -74,29 +76,31 @@ if(isset($_POST["book"]))
             
                 if($dao->insert($data, "book"))
                 {
-                    // --- NOTIFICATION SYSTEM TRIGGERS ---
+                    // --- DETAILED NOTIFICATIONS SYSTEM ---
                     $child_name = addslashes($_POST['cfirstname']);
                     $book_date = addslashes($_POST['book_date']);
+                    $formatted_date = date('d M Y', strtotime($book_date));
+                    $session_user = isset($_SESSION['username']) ? $_SESSION['username'] : (isset($_SESSION['email']) ? $_SESSION['email'] : '');
+                    $provided_email = addslashes($_POST['parent_email']);
                     
-                    // 1. Notify Parent (Using username/email from session)
-                    $parent_user = isset($_SESSION['username']) ? $_SESSION['username'] : (isset($_SESSION['email']) ? $_SESSION['email'] : '');
-                    if($parent_user != '') {
-                        $msg_parent = "Your vaccination booking for $child_name on $book_date at $hname_safe is Confirmed.";
-                        $dao->query("INSERT INTO notifications (user_email, message) VALUES ('$parent_user', '$msg_parent')");
+                    // 1. DETAILED IN-APP NOTIFICATION: Notify Parent
+                    if($session_user != '') {
+                        $msg_parent = "✅ <b>Booking Confirmed!</b> Your child, <b>$child_name</b>, is successfully scheduled for the <b>$vname_safe</b> vaccine on <b>$formatted_date</b> at <b>$hname_safe</b>. Please arrive 15 minutes prior to the appointment.";
+                        $dao->query("INSERT INTO notifications (user_email, message) VALUES ('$session_user', '$msg_parent')");
                     }
 
-                    // 2. Notify Health Workers at this specific center
+                    // 2. DETAILED IN-APP NOTIFICATION: Notify Health Workers
                     $hw_list = $dao->query("SELECT h_email FROM healthworker WHERE hid=$hid");
                     if(!empty($hw_list)) {
                         foreach($hw_list as $hw) {
                             $hw_email = $hw['h_email'];
-                            $msg_hw = "New Booking: $child_name is scheduled for $vname_safe on $book_date.";
+                            $msg_hw = "📅 <b>New Appointment Alert:</b> <b>$child_name</b> has been booked for the <b>$vname_safe</b> vaccine on <b>$formatted_date</b>. Parent Contact Email: $provided_email.";
                             $dao->query("INSERT INTO notifications (user_email, message) VALUES ('$hw_email', '$msg_hw')");
                         }
                     }
-                    // ------------------------------------
+                    // -------------------------------------------
 
-                    echo "<script> alert('Booking Success! Notifications sent.'); location.replace('viewbooking.php'); </script>";
+                    echo "<script> alert('Booking Success! Detailed notifications have been sent to your inbox.'); location.replace('viewbooking.php'); </script>";
                 }
                 else
                 {
@@ -170,6 +174,18 @@ if(isset($_POST["book"]))
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <span class="form-label">Parent Contact Email (Saved in health center records)</span>
+                                            <?php $default_email = isset($_SESSION['username']) ? $_SESSION['username'] : (isset($_SESSION['email']) ? $_SESSION['email'] : ''); ?>
+                                            <input class="form-control" name="parent_email" type="email" placeholder="Enter your email" value="<?php echo htmlspecialchars($default_email); ?>" required>
+                                            <?= $validator->error('parent_email'); ?>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="row">
                                     <div class="col-md-6">
                                        <div class="form-group">
